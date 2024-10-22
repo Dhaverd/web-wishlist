@@ -1,0 +1,60 @@
+<script>
+import axios from "axios";
+import {useUserStore} from "../../store/user.js";
+
+export default {
+    name: "Login",
+    data: () => ({
+        userStore: useUserStore(),
+        valid: false,
+        email: '',
+        password: '',
+        rememberMe: false,
+        errorMessage: '',
+        errorMessageContainerStyle: ''
+    }),
+    methods: {
+        loginAction(){
+            axios.post(
+                '/api/auth/login',
+                {'name': this.login,
+                    'email': this.email,
+                    'password': this.password,
+                    'remember_me': this.rememberMe
+                }).then((res) => {
+                console.log(res);
+                this.$cookie.set("keyName", keyValue, "expiring time")
+                this.$router.push('/');
+            }).catch((error)=>{
+                this.errorMessage = error;
+                this.errorMessageContainerStyle = '';
+            })
+        }
+    }
+}
+</script>
+
+<template>
+    <div class="d-flex flex-column justify-center align-center">
+        <v-text-field class="w-100"
+                      v-model="email"
+                      label="E-mail"
+                      required
+        ></v-text-field>
+        <v-text-field class="w-100"
+                      v-model="password"
+                      label="Пароль"
+                      type="password"
+                      required
+        ></v-text-field>
+        <div class="d-flex justify-start align-content-start w-100">
+            <v-checkbox v-model="rememberMe" label="Запомнить меня"></v-checkbox>
+        </div>
+        <v-label :style="errorMessageContainerStyle">{{ errorMessage }}</v-label>
+        <v-btn @click="this.loginAction">Войти</v-btn>
+    </div>
+</template>
+
+<style scoped>
+
+</style>
