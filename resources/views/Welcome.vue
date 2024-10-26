@@ -1,9 +1,17 @@
 <template>
     <v-card class="bg-gradient" style="height: 100%">
         <v-card-text class="d-flex justify-center align-center">
-            <v-card class="align-center justify-center h-auto w-33 card-bg">
-                <v-card-title>Добро пожаловать в <router-link to="/auth_options" class="link-no-decor">Wishlist</router-link>!</v-card-title>
-                <v-card-text>
+            <v-card class="align-center justify-center h-auto w-66 card-bg">
+                <v-card-title class="d-flex justify-space-between">
+                    <div>
+                        <span>Добро пожаловать в </span>
+                        <span><router-link :to="isAuthenticated ? '/wishlist' : '/auth_options'" class="link-no-decor">Wishlist</router-link>, </span>
+                        <span v-if="isAuthenticated">{{ this.user['name'] }}!</span>
+                        <span v-else>Гость!</span>
+                    </div>
+                    <span v-if="isAuthenticated" class="link-no-decor align-end" @click="logout">Выйти</span>
+                </v-card-title>
+                <v-card-text class="d-flex justify-center align-center">
                     <router-view/>
                 </v-card-text>
             </v-card>
@@ -13,19 +21,76 @@
 
 <script>
 import axios from "axios";
+import {useUserStore} from "../store/user.js";
+import {watch} from "vue";
 export default {
     name: "Welcome",
     data: () => ({
         cardTitle: 'Hello world!',
+        isAuthenticated: false,
         username: ''
     }),
+    computed: {
+        user() {
+            const authStore = useUserStore();
+            return authStore.user;
+        },
+    },
+    methods: {
+        async logout() {
+            try {
+                const authStore = useUserStore();
+                let token = authStore.token;
+                await axios.get('/api/auth/logout',
+                    {
+                        headers:
+                            {
+                                Authorization: `Bearer ${token}`,
+                                token: token
+                            }
+                    }
+                );
+                authStore.setUser(null);
+                authStore.setToken(null);
+                this.$router.push('/auth_options');
+            } catch (error) {
+                alert('Ошибка выхода');
+            }
+        },
+        checkUser(){
+            const authStore = useUserStore();
+            let token = authStore.token;
+            if (token){
+                axios.get(
+                    '/api/auth/user',
+                    {
+                        headers:
+                            {
+                                Authorization: `Bearer ${token}`,
+                                token: token
+                            }
+                    }
+                ).then((res) => {
+                    authStore.setUser(res.data);
+                }).catch((error)=>{
+                    authStore.setUser(null);
+                    authStore.setToken(null);
+                })
+            }
+        },
+    },
     mounted() {
         this.$router.push('/auth_options');
-        axios.get(
-            '/api/auth/user'
-        ).then((res) => {
-            console.log(res);
-        })
+        const authStore = useUserStore();
+        watch(authStore, (newStore, oldStore)=>{
+            this.isAuthenticated = newStore.user !== null && newStore.user !== undefined;
+            if (this.isAuthenticated) {
+                this.$router.push('/wishlist');
+            } else {
+                this.$router.push('/auth_options');
+            }
+        });
+        this.checkUser();
     }
 }
 </script>

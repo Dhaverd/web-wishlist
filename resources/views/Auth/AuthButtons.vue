@@ -5,7 +5,7 @@ export default {
 </script>
 
 <template>
-    <div class="d-flex flex-column justify-center align-center pa-3">
+    <div class="d-flex flex-column justify-center align-center pa-3 w-33">
         <router-link to="/login" class="w-100 ma-2">
             <v-btn class="w-100">
                 Вход

@@ -22,11 +22,16 @@ export default {
                     'password': this.password,
                     'remember_me': this.rememberMe
                 }).then((res) => {
-                console.log(res);
-                this.$cookie.set("keyName", keyValue, "expiring time")
+                this.userStore.setUser(res.data.user);
+                this.userStore.setToken(res.data.accessToken);
                 this.$router.push('/');
             }).catch((error)=>{
-                this.errorMessage = error;
+                if (!error.response){
+                    this.errorMessage = '';
+                    this.errorMessageContainerStyle = 'display: none;';
+                    return;
+                }
+                this.errorMessage = error.response.data.message;
                 this.errorMessageContainerStyle = '';
             })
         }
@@ -35,7 +40,7 @@ export default {
 </script>
 
 <template>
-    <div class="d-flex flex-column justify-center align-center">
+    <div class="d-flex flex-column justify-center align-center w-33">
         <v-text-field class="w-100"
                       v-model="email"
                       label="E-mail"
