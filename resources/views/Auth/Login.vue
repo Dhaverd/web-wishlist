@@ -1,5 +1,4 @@
 <script>
-import axios from "axios";
 import {useUserStore} from "../../store/user.js";
 
 export default {
@@ -15,25 +14,23 @@ export default {
     }),
     methods: {
         loginAction(){
-            axios.post(
-                '/api/auth/login',
-                {'name': this.login,
-                    'email': this.email,
-                    'password': this.password,
-                    'remember_me': this.rememberMe
-                }).then((res) => {
-                this.userStore.setUser(res.data.user);
-                this.userStore.setToken(res.data.accessToken);
-                this.$router.push('/');
-            }).catch((error)=>{
-                if (!error.response){
-                    this.errorMessage = '';
-                    this.errorMessageContainerStyle = 'display: none;';
-                    return;
+            this.userStore.login(this.email, this.password, this.rememberMe).then((isLogged) => {
+                if (typeof isLogged == "boolean") {
+                    if (isLogged){
+                        this.errorMessage = '';
+                        this.errorMessageContainerStyle = 'display: none;';
+                        this.$router.push('/');
+                    } else {
+                        this.errorMessage = 'Authentication error';
+                        this.errorMessageContainerStyle = '';
+                    }
+                } else if (typeof isLogged == "string") {
+                    this.errorMessage = isLogged;
+                    this.errorMessageContainerStyle = '';
                 }
-                this.errorMessage = error.response.data.message;
-                this.errorMessageContainerStyle = '';
-            })
+            });
+
+
         }
     }
 }

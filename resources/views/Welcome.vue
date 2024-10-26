@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {useUserStore} from "../store/user.js";
 import {watch} from "vue";
 export default {
@@ -28,61 +27,23 @@ export default {
     data: () => ({
         cardTitle: 'Hello world!',
         isAuthenticated: false,
-        username: ''
+        username: '',
+        userStore: useUserStore()
     }),
     computed: {
         user() {
-            const authStore = useUserStore();
-            return authStore.user;
+            return this.userStore.user;
         },
     },
     methods: {
         async logout() {
-            try {
-                const authStore = useUserStore();
-                let token = authStore.token;
-                await axios.get('/api/auth/logout',
-                    {
-                        headers:
-                            {
-                                Authorization: `Bearer ${token}`,
-                                token: token
-                            }
-                    }
-                );
-                authStore.setUser(null);
-                authStore.setToken(null);
-                this.$router.push('/auth_options');
-            } catch (error) {
-                alert('Ошибка выхода');
-            }
-        },
-        checkUser(){
-            const authStore = useUserStore();
-            let token = authStore.token;
-            if (token){
-                axios.get(
-                    '/api/auth/user',
-                    {
-                        headers:
-                            {
-                                Authorization: `Bearer ${token}`,
-                                token: token
-                            }
-                    }
-                ).then((res) => {
-                    authStore.setUser(res.data);
-                }).catch((error)=>{
-                    authStore.setUser(null);
-                    authStore.setToken(null);
-                })
-            }
-        },
+            this.userStore.logout();
+            this.$router.push('/auth_options');
+        }
     },
     mounted() {
         this.$router.push('/auth_options');
-        const authStore = useUserStore();
-        watch(authStore, (newStore, oldStore)=>{
+        watch(this.userStore, (newStore, oldStore)=>{
             this.isAuthenticated = newStore.user !== null && newStore.user !== undefined;
             if (this.isAuthenticated) {
                 this.$router.push('/wishlist');
@@ -90,7 +51,7 @@ export default {
                 this.$router.push('/auth_options');
             }
         });
-        this.checkUser();
+        this.userStore.checkUser();
     }
 }
 </script>

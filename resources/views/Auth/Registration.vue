@@ -1,5 +1,4 @@
 <script>
-import axios from "axios";
 import {useUserStore} from "../../store/user.js";
 
 export default {
@@ -16,20 +15,21 @@ export default {
     }),
     methods: {
         registrationAction(){
-            axios.post(
-                '/api/auth/register',
-                {'name': this.login,
-                    'email': this.email,
-                    'password': this.password,
-                    'c_password': this.repeatPassword
-            }).then((res) => {
-                this.userStore.setUser(res.data.user);
-                this.userStore.setToken(res.data.accessToken);
-                this.$router.push('/');
-            }).catch((error)=>{
-                this.errorMessage = error;
-                this.errorMessageContainerStyle = '';
-            })
+            this.userStore.registration(this.login, this.email, this.password, this.repeatPassword).then((isRegistred)=>{
+                if (typeof isRegistred == "boolean") {
+                    if (isRegistred){
+                        this.errorMessage = '';
+                        this.errorMessageContainerStyle = 'display: none;';
+                        this.$router.push('/');
+                    } else {
+                        this.errorMessage = 'Registration error';
+                        this.errorMessageContainerStyle = '';
+                    }
+                } else if (typeof isRegistred == "string") {
+                    this.errorMessage = isRegistred;
+                    this.errorMessageContainerStyle = '';
+                }
+            });
         }
     }
 }
