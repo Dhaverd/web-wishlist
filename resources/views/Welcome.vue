@@ -25,9 +25,7 @@ import {watch} from "vue";
 export default {
     name: "Welcome",
     data: () => ({
-        cardTitle: 'Hello world!',
         isAuthenticated: false,
-        username: '',
         userStore: useUserStore()
     }),
     computed: {
