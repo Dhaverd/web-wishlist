@@ -9,7 +9,7 @@ class WishesController extends Controller
 {
     public function getUserWishes(Request $request, string $user_id)
     {
-        return Wish::where('user_id', '=', $user_id)->get();
+        return Wish::select('id', 'name', 'price', 'url')->where('user_id', '=', $user_id)->get();
     }
 
     public function create(Request $request)
@@ -37,9 +37,13 @@ class WishesController extends Controller
         return response()->json($wish);
     }
 
-    public function destroy(Wish $wish)
+    public function destroy(Request $request)
     {
-        $wish->delete();
+        $request->validate([
+            'id' => 'required|exists:wishes,id',
+        ]);
+        // $wish->delete();
+        Wish::destroy($request->get('id'));
         return response()->json(null, 204);
     }
 }
