@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import axios from "axios";
 
 export const useUserStore = defineStore('user', {
@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', {
             this.token = token;
             localStorage.setItem('auth_token', token);
         },
-        checkUser(){
+        checkUser() {
             axios.get(
                 '/api/auth/user',
                 {
@@ -28,32 +28,33 @@ export const useUserStore = defineStore('user', {
                 }
             ).then((res) => {
                 this.setUser(res.data);
-            }).catch((error)=>{
+            }).catch((error) => {
                 this.nullifyUser();
             })
         },
-        async login(email, password, rememberMe){
+        async login(email, password, rememberMe) {
             await axios.post(
                 '/api/auth/login',
                 {
                     'email': email,
                     'password': password,
                     'remember_me': rememberMe
-            }).then((res) => {
+                }).then((res) => {
                 this.setUser(res.data.user);
                 this.setToken(res.data.accessToken);
                 return true;
-            }).catch((error)=>{
-                if (!error.response){
+            }).catch((error) => {
+                if (!error.response) {
                     return false;
                 }
                 return error.response.data.message;
             })
         },
-       async registration(login, email, password, repeatPassword){
+        async registration(login, email, password, repeatPassword) {
             await axios.post(
                 '/api/auth/register',
-                {'name': login,
+                {
+                    'name': login,
                     'email': email,
                     'password': password,
                     'c_password': repeatPassword
@@ -61,14 +62,14 @@ export const useUserStore = defineStore('user', {
                 this.setUser(res.data.user);
                 this.setToken(res.data.accessToken);
                 return true;
-            }).catch((error)=>{
-                if (!error.response){
+            }).catch((error) => {
+                if (!error.response) {
                     return false;
                 }
                 return error.response.data.message;
             })
         },
-        logout(){
+        logout() {
             axios.get('/api/auth/logout',
                 {
                     headers:
@@ -80,7 +81,7 @@ export const useUserStore = defineStore('user', {
             );
             this.nullifyUser();
         },
-        nullifyUser(){
+        nullifyUser() {
             this.setUser(null);
             this.setToken(null);
         }
