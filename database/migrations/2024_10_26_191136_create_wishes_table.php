@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name', length: 256);
-            $table->double('price');
-            $table->string('url', length: 256);
+            $table->double('price')->nullable();
+            $table->string('url', length: 256)->nullable();
             $table->timestamps();
         });
     }
