@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use \App\Http\Controllers\WishesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,5 +27,14 @@ Route::group(['prefix' => 'auth'], function () {
     Route::group(['middleware' => 'auth:sanctum'], function() {
         Route::get('logout', [AuthController::class, 'logout']);
         Route::get('user', [AuthController::class, 'user']);
+    });
+});
+
+Route::group(['prefix' => 'wish'], function () {
+    Route::get('user_wishes/{user_id}', [WishesController::class, 'getUserWishes']);
+    Route::group(['middleware' => 'auth:sanctum'], function() {
+        Route::post('create', [WishesController::class, 'create']);
+        Route::post('update', [WishesController::class, 'update']);
+        Route::post('destroy', [WishesController::class, 'destroy']);
     });
 });

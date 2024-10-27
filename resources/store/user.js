@@ -6,8 +6,6 @@ export const useUserStore = defineStore('user', {
         user: null,
         token: localStorage.getItem('auth_token') || null,
     }),
-    // could also be defined as
-    // state: () => ({ count: 0 })
     actions: {
         setUser(user) {
             this.user = user;

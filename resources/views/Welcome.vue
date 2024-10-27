@@ -68,14 +68,4 @@ export default {
     color: white;
 }
 
-.link-no-decor {
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.link-no-decor:hover {
-    color: #093160;
-}
-
 </style>
