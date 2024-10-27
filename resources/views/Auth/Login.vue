@@ -1,8 +1,14 @@
 <script>
 import {useUserStore} from "../../store/user.js";
+import {rules} from "../../js/rules.js";
 
 export default {
     name: "Login",
+    computed: {
+        rules() {
+            return rules
+        }
+    },
     data: () => ({
         userStore: useUserStore(),
         valid: false,
@@ -10,7 +16,8 @@ export default {
         password: '',
         rememberMe: false,
         errorMessage: '',
-        errorMessageContainerStyle: ''
+        errorMessageContainerStyle: '',
+        showPassword: false
     }),
     methods: {
         loginAction(){
@@ -41,12 +48,19 @@ export default {
         <v-text-field class="w-100"
                       v-model="email"
                       label="E-mail"
+                      type="email"
+                      v-on:keyup.enter="this.loginAction"
+                      :rules="[rules.email]"
                       required
         ></v-text-field>
         <v-text-field class="w-100"
                       v-model="password"
                       label="Пароль"
-                      type="password"
+                      :type="showPassword ? 'text' : 'password'"
+                      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="showPassword = !showPassword"
+                      v-on:keyup.enter="this.loginAction"
+                      :rules="[rules.notNull]"
                       required
         ></v-text-field>
         <div class="d-flex justify-start align-content-start w-100">

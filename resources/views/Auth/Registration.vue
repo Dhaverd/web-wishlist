@@ -1,5 +1,6 @@
 <script>
 import {useUserStore} from "../../store/user.js";
+import {rules} from "../../js/rules.js";
 
 export default {
     name: "Registration",
@@ -11,8 +12,15 @@ export default {
         password: '',
         repeatPassword: '',
         errorMessage: '',
-        errorMessageContainerStyle: 'display: none;'
+        errorMessageContainerStyle: 'display: none;',
+        showPassword: false,
+        showRepeatPassword: false
     }),
+    computed: {
+        rules() {
+            return rules
+        }
+    },
     methods: {
         registrationAction(){
             this.userStore.registration(this.login, this.email, this.password, this.repeatPassword).then((isRegistred)=>{
@@ -40,23 +48,36 @@ export default {
         <v-text-field class="w-100"
                       v-model="login"
                       label="Логин"
+                      v-on:keyup.enter="this.registrationAction"
+                      :rules="[rules.notNull]"
                       required
         ></v-text-field>
         <v-text-field class="w-100"
                       v-model="email"
                       label="E-mail"
+                      type="email"
+                      v-on:keyup.enter="this.registrationAction"
+                      :rules="[rules.email]"
                       required
         ></v-text-field>
         <v-text-field class="w-100"
                       v-model="password"
                       label="Пароль"
-                      type="password"
+                      :type="showPassword ? 'text' : 'password'"
+                      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="showPassword = !showPassword"
+                      v-on:keyup.enter="this.registrationAction"
+                      :rules="[rules.notNull]"
                       required
         ></v-text-field>
         <v-text-field class="w-100"
                       v-model="repeatPassword"
                       label="Повторите пароль"
-                      type="password"
+                      :type="showRepeatPassword ? 'text' : 'password'"
+                      :append-icon="showRepeatPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="showRepeatPassword = !showRepeatPassword"
+                      v-on:keyup.enter="this.registrationAction"
+                      :rules="[rules.notNull]"
                       required
         ></v-text-field>
         <v-label :style="errorMessageContainerStyle">{{ errorMessage }}</v-label>
