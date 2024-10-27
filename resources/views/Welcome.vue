@@ -63,9 +63,4 @@ export default {
     height: 100vh;
 }
 
-.card-bg {
-    background-color: #212022;
-    color: white;
-}
-
 </style>

@@ -9,15 +9,15 @@ export const useWishStore = defineStore('wish', {
         pushWish(wish){
             this.wishesList.push(wish);
         },
-        async getUserWishes(user_id, token){
+        async getUserWishes(user_id){
             let result = null;
             await axios.get(`/api/wish/user_wishes/${user_id.toString()}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        token: token
-                    }
-                }
+                // {
+                //     headers: {
+                //         Authorization: `Bearer ${token}`,
+                //         token: token
+                //     }
+                // }
             ).then((response)=>{
                 result = response.data;
             });
@@ -42,6 +42,21 @@ export const useWishStore = defineStore('wish', {
                 newWish = {status: response.status, statusText: response.statusText, data: response.data};
             });
             return newWish;
+        },
+        async remove(id, token){
+            await axios.post(`/api/wish/destroy`,
+                {
+                    id: id
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        token: token
+                    },
+                }
+            ).then((response)=>{
+                return response;
+            });
         }
     },
 })

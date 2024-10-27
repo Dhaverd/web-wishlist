@@ -7,10 +7,10 @@ export default {
     data: () => ({
         userStore: useUserStore(),
         valid: false,
-        login: '',
-        email: '',
-        password: '',
-        repeatPassword: '',
+        login: null,
+        email: null,
+        password: null,
+        repeatPassword: null,
         errorMessage: '',
         errorMessageContainerStyle: 'display: none;',
         showPassword: false,
@@ -22,7 +22,26 @@ export default {
         }
     },
     methods: {
+        validate(){
+            let emailValidation = rules.email(this.email);
+            let loginValidation = rules.notNull(this.login);
+            let passwordValidation = rules.notNull(this.password);
+            let repeatPasswordValidation = rules.notNull(this.repeatPassword);
+            let validation = [emailValidation, loginValidation, passwordValidation, repeatPasswordValidation];
+            let check = null;
+            validation.forEach((element)=>{
+                if (typeof element !== "boolean"){
+                    check = element;
+                }
+            })
+            return check === null ? true : check;
+        },
         registrationAction(){
+            let validation = this.validate();
+            if (validation !== true){
+                alert(validation);
+                return;
+            }
             this.userStore.registration(this.login, this.email, this.password, this.repeatPassword).then((isRegistred)=>{
                 if (typeof isRegistred == "boolean") {
                     if (isRegistred){

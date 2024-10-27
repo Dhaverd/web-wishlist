@@ -1,9 +1,18 @@
 .link-no-decor {
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
+    color: white!important;
+    text-decoration: none!important;
+    cursor: pointer!important;
 }
 
 .link-no-decor:hover {
-    color: #093160;
+    color: #093160!important;
+}
+
+.cursor-pointer {
+    cursor: pointer!important;
+}
+
+.card-bg {
+    background-color: #212022!important;
+    color: white!important;
 }

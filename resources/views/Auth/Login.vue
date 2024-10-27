@@ -12,15 +12,31 @@ export default {
     data: () => ({
         userStore: useUserStore(),
         valid: false,
-        email: '',
-        password: '',
+        email: null,
+        password: null,
         rememberMe: false,
         errorMessage: '',
         errorMessageContainerStyle: '',
         showPassword: false
     }),
     methods: {
+        validate(){
+            let emailValidation = rules.email(this.email);
+            let passwordValidation = rules.notNull(this.password);
+            if (typeof emailValidation == "boolean" && typeof passwordValidation == "boolean"){
+                return emailValidation && passwordValidation;
+            } else if (typeof emailValidation == "string") {
+                return emailValidation;
+            } else if (typeof passwordValidation == "string") {
+                return passwordValidation;
+            }
+        },
         loginAction(){
+            let validation = this.validate();
+            if (validation !== true){
+                alert(validation);
+                return;
+            }
             this.userStore.login(this.email, this.password, this.rememberMe).then((isLogged) => {
                 if (typeof isLogged == "boolean") {
                     if (isLogged){
