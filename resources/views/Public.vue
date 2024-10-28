@@ -1,7 +1,7 @@
 <template>
     <v-card class="bg-gradient" style="height: 100%">
         <v-card-text class="d-flex justify-center align-center">
-            <v-card class="align-center justify-center h-auto w-66 card-bg">
+            <v-card class="align-center justify-center h-auto card-bg" :class="isWide ? 'w-66' : 'w-100'">
                 <v-card-title class="d-flex justify-space-between">
                     <div>
                         <span>Добро пожаловать в </span>
@@ -20,7 +20,10 @@
 import ShowWhishlist from "./PublicWishlist/ShowWhishlist.vue";
 export default {
     name: "Public",
-    components: {ShowWhishlist}
+    components: {ShowWhishlist},
+    data: ()=>({
+        isWide: window.innerWidth >= 800
+    })
 }
 </script>
 

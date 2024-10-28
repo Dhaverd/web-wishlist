@@ -15,6 +15,7 @@ export default {
     data: () => ({
         userStore: useUserStore(),
         wishStore: useWishStore(),
+        isWide: window.innerWidth >= 800,
         name: null,
         price: null,
         url: null,
@@ -89,7 +90,7 @@ export default {
             <v-text-field class="w-100" label="Наименование" v-model="name" :rules="[rules.notNull]"></v-text-field>
             <v-text-field class="w-100" label="Стоимость" v-model="price"></v-text-field>
             <v-text-field class="w-100" label="Ссылка" v-model="url"></v-text-field>
-            <v-btn :loading="updating" class="w-33" @click="editWish">Сохранить</v-btn>
+            <v-btn :loading="updating" class="w-67" @click="editWish">Сохранить</v-btn>
         </v-card-text>
     </v-card>
 </template>

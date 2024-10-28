@@ -1,11 +1,14 @@
 <script>
 export default {
-    name: "AuthButtons"
+    name: "AuthButtons",
+    data: ()=>({
+        isWide: window.innerWidth >= 800
+    })
 }
 </script>
 
 <template>
-    <div class="d-flex flex-column justify-center align-center pa-3 w-33">
+    <div class="d-flex flex-column justify-center align-center pa-3" :class="isWide ? 'w-33' : 'w-100'">
         <router-link to="/login" class="w-100 ma-2">
             <v-btn class="w-100">
                 Вход

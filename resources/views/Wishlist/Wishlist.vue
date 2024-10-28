@@ -10,6 +10,7 @@ export default {
     data: () => ({
         userStore: useUserStore(),
         wishStore: useWishStore(),
+        isWide: window.innerWidth >= 800,
         wishesList: [],
         fetching: true,
         dialogCreate: ref(false),
@@ -77,7 +78,7 @@ export default {
             </v-text-field>
             <v-snackbar v-model="snackbar">Текст скопирован!</v-snackbar>
         </div>
-        <v-table v-if="!fetching" class="card-bg w-100 h-auto mt-5 pa-3">
+        <v-table v-if="!fetching && isWide" class="card-bg w-100 h-auto mt-5 pa-3">
             <thead>
                 <tr>
                     <th class="text-subtitle-1">Наименование</th>
@@ -103,6 +104,33 @@ export default {
                 <CreateWish :dialogCreate="dialogCreateClose" :updateFrontWishes="updateFrontWishes"/>
             </v-dialog>
             <v-dialog v-model="dialogEdit" class="w-66">
+                <EditWish :dialogEdit="dialogEditClose" :updateFrontWishes="updateFrontWishes" :wish_id="wishToEditId"/>
+            </v-dialog>
+        </v-table>
+        <v-table v-if="!fetching && !isWide" class="card-bg w-100 h-auto mt-5 pa-3">
+            <thead>
+                <tr>
+                    <th class="text-subtitle-1">Наименование</th>
+                    <th class="text-subtitle-1">Цена</th>
+                    <th class="text-subtitle-1"></th>
+                    <th class="text-subtitle-1"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="wish in wishesList">
+                    <td><a target="_blank" :href="wish['url']">{{ wish['name'] }}</a></td>
+                    <td>{{ wish['price'] }}</td>
+                    <td><v-icon @click="editWish(wish['id'])" class="cursor-pointer" color="white" icon="mdi-pencil"></v-icon></td>
+                    <td><v-icon @click="removeWish(wish['id'])" class="cursor-pointer" color="white" icon="mdi-trash-can"></v-icon></td>
+                </tr>
+                <tr class="text-center">
+                    <td colspan="5"><v-btn @click="dialogCreate = true" color="#212022" elevation="0" block><v-icon class="cursor-pointer" icon="mdi-plus-thick"></v-icon></v-btn></td>
+                </tr>
+            </tbody>
+            <v-dialog v-model="dialogCreate" :class="isWide ? 'w-66' : 'w-100'">
+                <CreateWish :dialogCreate="dialogCreateClose" :updateFrontWishes="updateFrontWishes"/>
+            </v-dialog>
+            <v-dialog v-model="dialogEdit" :class="isWide ? 'w-66' : 'w-100'">
                 <EditWish :dialogEdit="dialogEditClose" :updateFrontWishes="updateFrontWishes" :wish_id="wishToEditId"/>
             </v-dialog>
         </v-table>

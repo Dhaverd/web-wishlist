@@ -6,6 +6,7 @@ export default {
     name: "Registration",
     data: () => ({
         userStore: useUserStore(),
+        isWide: window.innerWidth >= 800,
         valid: false,
         login: null,
         email: null,
@@ -66,7 +67,7 @@ export default {
 </script>
 
 <template>
-    <div class="d-flex flex-column justify-center align-center w-33">
+    <div class="d-flex flex-column justify-center align-center" :class="isWide ? 'w-33' : 'w-100'">
         <v-text-field class="w-100"
                       v-model="login"
                       label="Логин"

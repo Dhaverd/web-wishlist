@@ -7,6 +7,7 @@ export default {
     data: () => ({
         userStore: useUserStore(),
         wishStore: useWishStore(),
+        isWide: window.innerWidth >= 800,
         name: null,
         price: null,
         url: null,
@@ -61,7 +62,7 @@ export default {
 <template>
     <v-card class="card-bg">
         <v-card-title class="d-flex justify-space-between">
-            <span>Создать новый элемент</span>
+            <span>Создание</span>
             <span>
                 <v-icon @click="dialogCreate" class="cursor-pointer" color="white" icon="mdi-close-thick"></v-icon>
             </span>

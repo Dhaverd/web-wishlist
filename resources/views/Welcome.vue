@@ -1,13 +1,18 @@
 <template>
-    <v-card class="bg-gradient" style="height: 100%">
+    <v-card class="bg-gradient" style="height: 100%" :class="isWide ? '' : 'd-flex justify-center align-center'">
         <v-card-text class="d-flex justify-center align-center">
-            <v-card class="align-center justify-center h-auto w-66 card-bg">
-                <v-card-title class="d-flex justify-space-between">
-                    <div>
+            <v-card class="align-center justify-center h-auto w-66 card-bg" :class="isWide ? 'w-66' : 'w-100'">
+                <v-card-title class="d-flex justify-space-between" :class="isWide ? '' : 'text-subtitle-1'">
+                    <div v-if="isWide">
+                        <!-- Добро пожаловать в <router-link :to="isAuthenticated ? '/wishlist' : '/auth_options'" class="link-no-decor">Wishlist</router-link>, {{ isAuthenticated ? user['name'] : 'Гость' }}! -->
                         <span>Добро пожаловать в </span>
                         <span><router-link :to="isAuthenticated ? '/wishlist' : '/auth_options'" class="link-no-decor">Wishlist</router-link>, </span>
                         <span v-if="isAuthenticated">{{ this.user['name'] }}!</span>
                         <span v-else>Гость!</span>
+                    </div>
+                    <div v-if="!isWide">
+                        <p>Добро пожаловать в</p>
+                        <p><router-link :to="isAuthenticated ? '/wishlist' : '/auth_options'" class="link-no-decor">Wishlist</router-link>, {{ isAuthenticated ? user['name'] : 'Гость' }}!</p>
                     </div>
                     <span v-if="isAuthenticated" class="link-no-decor align-end" @click="logout">Выйти</span>
                 </v-card-title>
@@ -28,7 +33,8 @@ export default {
     data: () => ({
         isAuthenticated: false,
         userStore: useUserStore(),
-        fetchingUser: false
+        fetchingUser: false,
+        isWide: window.innerWidth >= 800
     }),
     computed: {
         user() {
