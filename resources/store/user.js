@@ -82,6 +82,20 @@ export const useUserStore = defineStore('user', {
         nullifyUser() {
             this.setUser(null);
             this.setToken(null);
+        },
+        async getUsername(id){
+            let result = null;
+            await axios.get('/api/wish/username',
+                {
+                    params:
+                        {
+                            user_id: id
+                        }
+                }
+            ).then((res) => {
+                result = res;
+            });
+            return result;
         }
     },
 })

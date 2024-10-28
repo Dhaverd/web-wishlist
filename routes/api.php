@@ -31,10 +31,12 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'wish'], function () {
+    Route::get('username', [WishesController::class, 'getUsername']);
     Route::get('user_wishes/{user_id}', [WishesController::class, 'getUserWishes']);
     Route::group(['middleware' => 'auth:sanctum'], function() {
         Route::post('create', [WishesController::class, 'create']);
         Route::post('update', [WishesController::class, 'update']);
         Route::post('destroy', [WishesController::class, 'destroy']);
+        Route::get('by_id/{id}', [WishesController::class, 'getWishById']);
     });
 });

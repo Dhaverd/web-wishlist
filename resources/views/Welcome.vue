@@ -12,7 +12,8 @@
                     <span v-if="isAuthenticated" class="link-no-decor align-end" @click="logout">Выйти</span>
                 </v-card-title>
                 <v-card-text class="d-flex justify-center align-center">
-                    <router-view/>
+                    <v-skeleton-loader class="w-100" color="grey-darken-4" type="card" v-if="fetchingUser"></v-skeleton-loader>
+                    <router-view v-else/>
                 </v-card-text>
             </v-card>
         </v-card-text>
@@ -26,7 +27,8 @@ export default {
     name: "Welcome",
     data: () => ({
         isAuthenticated: false,
-        userStore: useUserStore()
+        userStore: useUserStore(),
+        fetchingUser: false
     }),
     computed: {
         user() {
@@ -40,9 +42,11 @@ export default {
         }
     },
     mounted() {
+        this.fetchingUser = true;
         this.$router.push('/auth_options');
         watch(this.userStore, (newStore, oldStore)=>{
             this.isAuthenticated = newStore.user !== null && newStore.user !== undefined;
+            this.fetchingUser = false;
             if (this.isAuthenticated) {
                 this.$router.push('/wishlist');
             } else {

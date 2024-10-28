@@ -17,7 +17,8 @@ export default {
         rememberMe: false,
         errorMessage: '',
         errorMessageContainerStyle: '',
-        showPassword: false
+        showPassword: false,
+        loading: false
     }),
     methods: {
         validate(){
@@ -32,12 +33,14 @@ export default {
             }
         },
         loginAction(){
+            this.loading = true;
             let validation = this.validate();
             if (validation !== true){
                 alert(validation);
                 return;
             }
             this.userStore.login(this.email, this.password, this.rememberMe).then((isLogged) => {
+                this.loading = false;
                 if (typeof isLogged == "boolean") {
                     if (isLogged){
                         this.errorMessage = '';
@@ -83,7 +86,7 @@ export default {
             <v-checkbox v-model="rememberMe" label="Запомнить меня"></v-checkbox>
         </div>
         <v-label :style="errorMessageContainerStyle">{{ errorMessage }}</v-label>
-        <v-btn @click="this.loginAction">Войти</v-btn>
+        <v-btn @click="this.loginAction" :loading="loading">Войти</v-btn>
     </div>
 </template>
 

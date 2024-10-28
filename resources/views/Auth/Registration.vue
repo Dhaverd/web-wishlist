@@ -14,7 +14,8 @@ export default {
         errorMessage: '',
         errorMessageContainerStyle: 'display: none;',
         showPassword: false,
-        showRepeatPassword: false
+        showRepeatPassword: false,
+        loading: false
     }),
     computed: {
         rules() {
@@ -37,12 +38,14 @@ export default {
             return check === null ? true : check;
         },
         registrationAction(){
+            this.loading = true;
             let validation = this.validate();
             if (validation !== true){
                 alert(validation);
                 return;
             }
             this.userStore.registration(this.login, this.email, this.password, this.repeatPassword).then((isRegistred)=>{
+                this.loading = false;
                 if (typeof isRegistred == "boolean") {
                     if (isRegistred){
                         this.errorMessage = '';
@@ -100,7 +103,7 @@ export default {
                       required
         ></v-text-field>
         <v-label :style="errorMessageContainerStyle">{{ errorMessage }}</v-label>
-        <v-btn @click="this.registrationAction">Регистрация</v-btn>
+        <v-btn @click="this.registrationAction" :loading="loading">Регистрация</v-btn>
     </div>
 <!--    <v-form v-model="valid"  @submit.prevent>-->
 <!--        -->

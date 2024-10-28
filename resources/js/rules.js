@@ -5,5 +5,11 @@ export const rules = {
     },
     notNull: value => {
         return (value !== null && value !== undefined && value !== '') || 'Поле не может быть пустым';
+    },
+    id: value => {
+        return (value !== null && value !== undefined && typeof value == 'number') || 'Неверный id';
+    },
+    price: value => {
+        return (typeof value == 'number' || typeof value == 'undefined' || value === null) || 'Стоимость должна быть числом';
     }
 }

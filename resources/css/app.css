@@ -16,3 +16,15 @@
     background-color: #212022!important;
     color: white!important;
 }
+
+a:link {
+    color: aqua;
+}
+
+a:visited {
+    color: darkorange;
+}
+
+a:active {
+    color: crimson;
+}

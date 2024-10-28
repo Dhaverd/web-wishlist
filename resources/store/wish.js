@@ -57,6 +57,39 @@ export const useWishStore = defineStore('wish', {
             ).then((response)=>{
                 return response;
             });
-        }
+        },
+        async update(id, user_id, name, price, url, token){
+            await axios.post(`/api/wish/update`,
+                {
+                    id: id,
+                    user_id: user_id,
+                    name: name,
+                    price: price,
+                    url: url
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        token: token
+                    },
+                }
+            ).then((response)=>{
+                return response;
+            });
+        },
+        async getWishById(id, token){
+            let result = null;
+            await axios.get(`/api/wish/by_id/${id.toString()}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        token: token
+                    }
+                }
+            ).then((response)=>{
+                result = response.data;
+            });
+            return result;
+        },
     },
 })
