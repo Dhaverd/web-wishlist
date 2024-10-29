@@ -11,5 +11,8 @@ export const rules = {
     },
     price: value => {
         return (typeof value == 'number' || typeof value == 'undefined' || value === null) || 'Стоимость должна быть числом';
+    },
+    isNumber: value => {
+        return /^\d+[\.,\,]?\d*$/.test(value);
     }
 }
