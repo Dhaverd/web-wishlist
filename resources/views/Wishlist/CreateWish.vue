@@ -27,7 +27,7 @@ export default {
             if (this.price == ''){
                 this.price = null;
             }
-            if (typeof this.price == 'string' && /^\d+[\.,\,]?\d+$/.test(this.price)){
+            if (typeof this.price == 'string' && /^\d+[\.,\,]?\d*$/.test(this.price)){
                 this.price = parseFloat(this.price)
             }
             let validateName = rules.notNull(this.name);
