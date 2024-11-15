@@ -4,9 +4,10 @@ import {useWishStore} from "../../store/wish.js";
 import CreateWish from "./CreateWish.vue";
 import {ref} from "vue";
 import EditWish from "./EditWish.vue";
+import DeleteWish from "./DeleteWish.vue";
 export default {
     name: "Wishlist",
-    components: {EditWish, CreateWish},
+    components: {DeleteWish, EditWish, CreateWish},
     data: () => ({
         userStore: useUserStore(),
         wishStore: useWishStore(),
@@ -35,22 +36,15 @@ export default {
         dialogEditClose(){
             this.dialogEdit = false;
         },
+        dialogDeleteClose(){
+            this.dialogDelete = false;
+        },
         updateFrontWishes(){
             this.fetching = true;
             this.wishStore.getUserWishes(this.userStore.user['id']).then((wishes)=>{
                 this.wishesList = wishes;
                 this.fetching = false
             });
-        },
-        removeWish(id){
-            this.fetching = true;
-            this.wishStore.remove(id, this.userStore.token).then(()=>{
-                this.dialogDelete = false;
-                this.wishStore.getUserWishes(this.userStore.user['id']).then((wishes)=>{
-                    this.wishesList = wishes;
-                    this.fetching = false;
-                });
-            })
         },
         editWish(id){
             this.wishToEditId = id;
@@ -114,20 +108,7 @@ export default {
                 <EditWish :dialogEdit="dialogEditClose" :updateFrontWishes="updateFrontWishes" :wish_id="wishToEditId"/>
             </v-dialog>
             <v-dialog v-model="dialogDelete" :class="isWide ? 'w-33' : 'w-100'">
-                <v-card class="card-bg">
-                    <v-card-title class="d-flex justify-space-between">
-                        <span>Удалить запись?</span>
-                        <span>
-                            <v-icon @click="dialogDelete = false" class="cursor-pointer" color="white" icon="mdi-close-thick"></v-icon>
-                        </span>
-                    </v-card-title>
-                    <v-card-text>
-                        <div class="d-flex justify-center">
-                            <v-btn class="ma-3" @click="removeWish(wishToDelete)">Да</v-btn>
-                            <v-btn class="ma-3" @click="dialogDelete = false">Нет</v-btn>
-                        </div>
-                    </v-card-text>
-                </v-card>
+                <DeleteWish :dialogDelete="dialogDeleteClose" :updateFrontWishes="updateFrontWishes" :wish_id="wishToDelete"/>
             </v-dialog>
         </v-table>
         <v-table v-if="!fetching && !isWide" class="card-bg w-100 h-auto mt-5 pa-3">
@@ -157,20 +138,7 @@ export default {
                 <EditWish :dialogEdit="dialogEditClose" :updateFrontWishes="updateFrontWishes" :wish_id="wishToEditId"/>
             </v-dialog>
             <v-dialog v-model="dialogDelete" :class="isWide ? 'w-66' : 'w-100'">
-                <v-card class="card-bg">
-                    <v-card-title class="d-flex justify-space-between">
-                        <span>Удалить запись?</span>
-                        <span>
-                            <v-icon @click="dialogDelete = false" class="cursor-pointer" color="white" icon="mdi-close-thick"></v-icon>
-                        </span>
-                    </v-card-title>
-                    <v-card-text>
-                        <div class="d-flex justify-center">
-                            <v-btn class="ma-3" @click="removeWish(wishToDelete)">Да</v-btn>
-                            <v-btn class="ma-3" @click="dialogDelete = false">Нет</v-btn>
-                        </div>
-                    </v-card-text>
-                </v-card>
+                <DeleteWish :dialogDelete="dialogDeleteClose" :updateFrontWishes="updateFrontWishes" :wish_id="wishToDelete"/>
             </v-dialog>
         </v-table>
     </div>
