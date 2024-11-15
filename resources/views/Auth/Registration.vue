@@ -43,6 +43,7 @@ export default {
             let validation = this.validate();
             if (validation !== true){
                 alert(validation);
+                this.loading = false;
                 return;
             }
             this.userStore.registration(this.login, this.email, this.password, this.repeatPassword).then((isRegistred)=>{

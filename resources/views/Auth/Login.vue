@@ -38,6 +38,7 @@ export default {
             let validation = this.validate();
             if (validation !== true){
                 alert(validation);
+                this.loading = false;
                 return;
             }
             this.userStore.login(this.email, this.password, this.rememberMe).then((isLogged) => {
