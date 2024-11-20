@@ -11,14 +11,7 @@ export const useWishStore = defineStore('wish', {
         },
         async getUserWishes(user_id){
             let result = null;
-            await axios.get(`/api/wish/user_wishes/${user_id.toString()}`,
-                // {
-                //     headers: {
-                //         Authorization: `Bearer ${token}`,
-                //         token: token
-                //     }
-                // }
-            ).then((response)=>{
+            await axios.get(`/api/wish/user_wishes/${user_id.toString()}`).then((response)=>{
                 result = response.data;
             });
             return result;
