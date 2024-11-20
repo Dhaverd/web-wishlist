@@ -10,7 +10,26 @@ class WishesController extends Controller
 {
     public function getUserWishes(Request $request, string $user_id)
     {
-        return Wish::select('id', 'name', 'price', 'url')->where('user_id', '=', $user_id)->get();
+        $result = [];
+        $wishes = Wish::select('id', 'name', 'price', 'url', 'book_user_id')->where('user_id', '=', $user_id)->get();
+        foreach ($wishes as $wish){
+            $book_user_raw = User::find($wish['book_user_id']);
+            $book_user = null;
+            if (isset($book_user_raw)){
+                $book_user = [
+                    'id' => $book_user_raw['id'],
+                    'name' => $book_user_raw['name']
+                ];
+            }
+            $result[] = [
+                'id' => $wish['id'],
+                'name' => $wish['name'],
+                'price' => $wish['price'],
+                'url' => $wish['url'],
+                'book_user' => $book_user
+            ];
+        }
+        return $result;
     }
 
     public function getUsername(Request $request){
