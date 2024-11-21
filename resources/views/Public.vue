@@ -5,7 +5,9 @@
                 <v-card-title class="d-flex justify-space-between">
                     <div>
                         <span>Добро пожаловать в </span>
-                        <span><a href="/" class="link-no-decor">Wishlist</a></span>
+                        <span><a href="/" class="link-no-decor">Wishlist</a>,&nbsp;</span>
+                        <span v-if="userStore.user !== null">{{ userStore.user['name'] }}</span>
+                        <span v-else>Гость</span>
                     </div>
                 </v-card-title>
                 <v-card-text class="d-flex justify-center align-center h-auto">
@@ -18,12 +20,17 @@
 
 <script>
 import ShowWhishlist from "./PublicWishlist/ShowWhishlist.vue";
+import {useUserStore} from "../store/user.js";
 export default {
     name: "Public",
     components: {ShowWhishlist},
     data: ()=>({
-        isWide: window.innerWidth >= 800
-    })
+        isWide: window.innerWidth >= 800,
+        userStore: useUserStore()
+    }),
+    mounted() {
+        useUserStore().checkUser();
+    }
 }
 </script>
 
