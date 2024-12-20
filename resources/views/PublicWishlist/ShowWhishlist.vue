@@ -109,28 +109,6 @@ export default {
             </v-card>
         </v-dialog>
     </div>
-<!--    <v-table v-if="!fetching && !isWide" class="card-bg w-100 h-auto mt-5 pa-3">-->
-<!--        <thead>-->
-<!--            <tr>-->
-<!--                <th colspan="3" class="text-center text-subtitle-1">Список пользователя {{ this.username }}</th>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th class="text-body-1">Наименование</th>-->
-<!--                <th class="text-body-1">Цена</th>-->
-<!--                <th class="text-body-1">Бронь</th>-->
-<!--            </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--            <tr v-for="wish in wishes">-->
-<!--                <td><a target="_blank" :href="wish['url']">{{ wish['name'] }}</a></td>-->
-<!--                <td>{{ wish['price'] }}</td>-->
-<!--                <td>-->
-<!--                    <v-icon v-if="wish['book_user'] === null" class="cursor-pointer" color="white" icon="mdi-lock"></v-icon>-->
-<!--                    <span v-else><v-icon color="green" icon="mdi-check-bold"></v-icon></span>-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--        </tbody>-->
-<!--    </v-table>-->
 </template>
 
 <style scoped>

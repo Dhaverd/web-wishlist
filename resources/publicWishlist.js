@@ -16,4 +16,12 @@ const vuetify = createVuetify({
 
 const pinia = createPinia()
 
-createApp(PublicApp).use(vuetify).use(pinia).mount("#app")
+const routes = [
+]
+
+const router = createRouter({
+    history: createMemoryHistory(),
+    routes,
+})
+
+createApp(PublicApp).use(vuetify).use(router).use(pinia).mount("#app")
