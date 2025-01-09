@@ -4,10 +4,13 @@ import { useUserStore } from "../../store/user.js";
 import DeleteWish from "../Wishlist/DeleteWish.vue";
 import CreateWish from "../Wishlist/CreateWish.vue";
 import EditWish from "../Wishlist/EditWish.vue";
+import {watch} from "vue";
 export default {
     name: "ShowWhishlist",
     components: {EditWish, CreateWish, DeleteWish},
     data: () => ({
+        isAuthenticated: false,
+        isSameUser: false,
         wishes: [],
         wishStore: useWishStore(),
         userStore: useUserStore(),
@@ -16,7 +19,10 @@ export default {
         username: '',
         bookConfirmationDialog: false,
         bookItemId: '',
-        bookItemName: ''
+        bookItemName: '',
+        bookError: false,
+        bookErrorText: '',
+        bookLoading: false
     }),
     methods: {
         bookDialog(id, name){
@@ -26,14 +32,41 @@ export default {
         },
         closeBookDialog(){
             this.bookConfirmationDialog = false;
+        },
+        book(){
+            this.bookLoading = true;
+            this.wishStore.book(this.bookItemId, this.userStore.user["id"], this.userStore.token).then((response)=>{
+                this.bookError = false;
+                if (response.request.status == 409){
+                    this.bookErrorText = response.response.data.error;
+                    this.bookError = true;
+                } else {
+                    this.bookConfirmationDialog = false;
+                    this.fetching = true;
+                    let urlArray = window.location.href.split('/');
+                    let user_id = urlArray[urlArray.length - 1];
+                    this.wishStore.getUserWishes(user_id).then((res)=>{
+                        this.wishes = res;
+                        this.fetching = false;
+                    });
+                }
+                this.bookLoading = false;
+            }).catch(()=>{
+                this.bookLoading = false;
+            });
         }
     },
     mounted() {
         let urlArray = window.location.href.split('/');
         let user_id = urlArray[urlArray.length - 1];
+        watch(this.userStore, (newStore, oldStore)=>{
+            this.isAuthenticated = newStore.user !== null && newStore.user !== undefined;
+            if (newStore.user !== null && newStore.user !== undefined){
+                this.isSameUser = user_id == this.userStore.user['id'];
+            }
+        });
         this.fetching = true;
         this.userStore.getUsername(user_id).then((res)=>{
-            console.log(res);
             this.username = res.data.username;
             this.wishStore.getUserWishes(user_id).then((responce)=>{
                 this.wishes = responce;
@@ -64,19 +97,26 @@ export default {
                 <td>{{ wish['price'] }}</td>
                 <td><a target="_blank" :href="wish['url']">{{ wish['url'] }}</a></td>
                 <td>
-                    <v-btn v-if="wish['book_user'] === null" @click="bookDialog(wish['id'], wish['name'])">Забронировать</v-btn>
+                    <span v-if="wish['book_user'] === null">
+                        <v-btn v-if="isAuthenticated && !isSameUser" @click="bookDialog(wish['id'], wish['name'])">Забронировать</v-btn>
+                        <span v-else>Нет</span>
+                    </span>
                     <span v-else><v-icon color="green" icon="mdi-check-bold"></v-icon></span>
                 </td>
             </tr>
         </tbody>
-        <!-- TODO Сделать чек логина -->
         <v-dialog v-model="bookConfirmationDialog" class="w-33">
             <v-card class="card-bg">
                 <v-card-text>
-                    <v-label style="text-wrap: auto;">Хотите забронировать {{ bookItemName }}?</v-label>
-                    <div class="d-flex justify-center">
-                        <v-btn class="mt-2 ml-2 mr-2">Да</v-btn>
-                        <v-btn @click="closeBookDialog" class="mt-2 ml-2 mr-2">Нет</v-btn>
+                    <div>
+                        <v-label style="text-wrap: auto;">Хотите забронировать {{ bookItemName }}?</v-label>
+                        <div class="d-flex justify-center">
+                            <v-btn @click="book" :loading="bookLoading" class="mt-2 ml-2 mr-2">Да</v-btn>
+                            <v-btn @click="closeBookDialog" class="mt-2 ml-2 mr-2">Нет</v-btn>
+                        </div>
+                    </div>
+                    <div>
+
                     </div>
                 </v-card-text>
             </v-card>
@@ -91,18 +131,20 @@ export default {
             <div class="d-flex flex-column">
                 <v-label class="mr-3 ml-5 text-body-1">Цена: {{ wish['price'] }}₽</v-label>
                 <v-label class="mr-3 ml-5 text-body-1">Забронировано:&nbsp;
-                    <span v-if="wish['book_user'] === null" class="smth" @click="bookDialog(wish['id'], wish['name'])">Нет</span>
+                    <span v-if="wish['book_user'] === null">
+                        <v-btn v-if="isAuthenticated && !isSameUser" @click="bookDialog(wish['id'], wish['name'])">Забронировать</v-btn>
+                        <span v-else>Нет</span>
+                    </span>
                     <span v-else> Да</span>
                 </v-label>
             </div>
         </div>
-        <!-- TODO Сделать чек логина -->
         <v-dialog v-model="bookConfirmationDialog">
             <v-card class="card-bg">
                 <v-card-text>
                     <v-label style="text-wrap: auto;">Хотите забронировать {{ bookItemName }}?</v-label>
                     <div class="d-flex justify-center">
-                        <v-btn class="mt-2 ml-2 mr-2">Да</v-btn>
+                        <v-btn @click="book" :loading="bookLoading" class="mt-2 ml-2 mr-2">Да</v-btn>
                         <v-btn @click="closeBookDialog" class="mt-2 ml-2 mr-2">Нет</v-btn>
                     </div>
                 </v-card-text>

@@ -84,5 +84,25 @@ export const useWishStore = defineStore('wish', {
             });
             return result;
         },
+        async book(id, user_id, token){
+            let result = null;
+            await axios.post(`/api/wish/book`,
+                {
+                    id: id,
+                    user_id: user_id
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        token: token
+                    },
+                }
+            ).then((response)=>{
+                result = response;
+            }).catch((error)=>{
+                result = error;
+            });
+            return result;
+        }
     },
 })

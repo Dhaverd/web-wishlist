@@ -47,7 +47,9 @@ export default {
                     if (isLogged){
                         this.errorMessage = '';
                         this.errorMessageContainerStyle = 'display: none;';
-                        this.$router.push('/');
+                        // this.$router.push('/');
+                        // console.log(window.location.href);
+                        // window.location.replace(window.location.href);
                     } else {
                         this.errorMessage = 'Authentication error';
                         this.errorMessageContainerStyle = '';

@@ -84,4 +84,19 @@ class WishesController extends Controller
         Wish::destroy($request->get('id'));
         return response()->json(null, 204);
     }
+
+    public function book(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:wishes,id',
+            'user_id' => 'required|exists:users,id'
+        ]);
+        $wish = Wish::find($request->get('id'));
+        if (isset($wish->book_user_id)){
+            return response()->json(["error" => 'Уже забронировано' ], 409);
+        }
+        $wish->book_user_id = $request->get('user_id');
+        $wish->save();
+        return response()->json($wish, 200);
+    }
 }

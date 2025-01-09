@@ -38,5 +38,6 @@ Route::group(['prefix' => 'wish'], function () {
         Route::post('update', [WishesController::class, 'update']);
         Route::post('destroy', [WishesController::class, 'destroy']);
         Route::get('by_id/{id}', [WishesController::class, 'getWishById']);
+        Route::post('book', [WishesController::class, 'book']);
     });
 });
