@@ -99,4 +99,15 @@ class WishesController extends Controller
         $wish->save();
         return response()->json($wish, 200);
     }
+
+    public function unbook(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:wishes,id'
+        ]);
+        $wish = Wish::find($request->get('id'));
+        $wish->book_user_id = null;
+        $wish->save();
+        return response()->json($wish, 200);
+    }
 }

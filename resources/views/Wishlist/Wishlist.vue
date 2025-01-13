@@ -60,6 +60,11 @@ export default {
         copyLink(){
             navigator.clipboard.writeText(this.wishlistLink);
             this.snackbar = true;
+        },
+        unbook(id){
+            this.wishStore.unbook(id, this.userStore.token).then(()=>{
+                this.updateFrontWishes();
+            });
         }
     }
 }
@@ -96,7 +101,7 @@ export default {
                     <td>{{ wish['name'] }}</td>
                     <td>{{ wish['price'] }}</td>
                     <td><a target="_blank" :href="wish['url']">{{ wish['url'] }}</a></td>
-                    <td>{{ wish['book_user'] === null ? 'Нет' : wish['book_user']['name'] }}</td>
+                    <td>{{ wish['book_user'] === null ? 'Нет' : wish['book_user']['name'] }}<v-icon v-if="wish['book_user'] !== null" @click="unbook(wish['id'])" class="cursor-pointer" icon="mdi-close-thick" color="red"></v-icon></td>
                     <td><v-icon @click="editWish(wish['id'])" class="cursor-pointer" color="white" icon="mdi-pencil"></v-icon></td>
                     <td><v-icon @click="deleteWish(wish['id'])" class="cursor-pointer" color="white" icon="mdi-trash-can"></v-icon></td>
                 </tr>
@@ -124,7 +129,9 @@ export default {
                 </div>
                 <div class="d-flex flex-column">
                     <v-label class="mr-3 ml-5 text-body-1">Цена: {{ wish['price'] }}₽</v-label>
-                    <v-label class="mr-3 ml-5 text-body-1">Забронировано: {{ wish['book_user'] === null ? 'Нет' : wish['book_user']['name'] }}</v-label>
+                    <v-label class="mr-3 ml-5 text-body-1">Забронировано: {{ wish['book_user'] === null ? 'Нет' : wish['book_user']['name'] }}
+                        <v-icon v-if="wish['book_user'] !== null" @click="unbook(wish['id'])" class="cursor-pointer" icon="mdi-close-thick" color="red"></v-icon>
+                    </v-label>
                 </div>
             </div>
             <div class="w-100 mt-3">
@@ -140,38 +147,6 @@ export default {
                 <DeleteWish :dialogDelete="dialogDeleteClose" :updateFrontWishes="updateFrontWishes" :wish_id="wishToDelete"/>
             </v-dialog>
         </div>
-<!--        <v-table v-if="!fetching && !isWide" class="card-bg w-100 h-auto mt-5 pa-3">-->
-<!--            <thead>-->
-<!--                <tr>-->
-<!--                    <th class="text-subtitle-1">Наименование</th>-->
-<!--                    <th class="text-subtitle-1">Цена</th>-->
-<!--                    <th class="text-subtitle-1">Забронировано</th>-->
-<!--                    <th class="text-subtitle-1"></th>-->
-<!--                    <th class="text-subtitle-1"></th>-->
-<!--                </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--                <tr v-for="wish in wishesList">-->
-<!--                    <td><a target="_blank" :href="wish['url']">{{ wish['name'] }}</a></td>-->
-<!--                    <td>{{ wish['price'] }}</td>-->
-<!--                    <td>{{ wish['book_user'] === null ? 'Нет' : wish['book_user']['name'] }}</td>-->
-<!--                    <td><v-icon @click="editWish(wish['id'])" class="cursor-pointer" color="white" icon="mdi-pencil"></v-icon></td>-->
-<!--                    <td><v-icon @click="deleteWish(wish['id'])" class="cursor-pointer" color="white" icon="mdi-trash-can"></v-icon></td>-->
-<!--                </tr>-->
-<!--                <tr class="text-center">-->
-<!--                    <td colspan="6"><v-btn @click="dialogCreate = true" color="#212022" elevation="0" block><v-icon class="cursor-pointer" icon="mdi-plus-thick"></v-icon></v-btn></td>-->
-<!--                </tr>-->
-<!--            </tbody>-->
-<!--            <v-dialog v-model="dialogCreate" :class="isWide ? 'w-66' : 'w-100'">-->
-<!--                <CreateWish :dialogCreate="dialogCreateClose" :updateFrontWishes="updateFrontWishes"/>-->
-<!--            </v-dialog>-->
-<!--            <v-dialog v-model="dialogEdit" :class="isWide ? 'w-66' : 'w-100'">-->
-<!--                <EditWish :dialogEdit="dialogEditClose" :updateFrontWishes="updateFrontWishes" :wish_id="wishToEditId"/>-->
-<!--            </v-dialog>-->
-<!--            <v-dialog v-model="dialogDelete" :class="isWide ? 'w-66' : 'w-100'">-->
-<!--                <DeleteWish :dialogDelete="dialogDeleteClose" :updateFrontWishes="updateFrontWishes" :wish_id="wishToDelete"/>-->
-<!--            </v-dialog>-->
-<!--        </v-table>-->
     </div>
 </template>
 

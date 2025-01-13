@@ -1,19 +1,27 @@
 <template>
-    <v-card class="bg-gradient" style="height: 100%">
+    <v-card class="bg-gradient" style="height: 100%" :class="isWide ? '' : 'd-flex justify-center align-center'">
         <v-card-text class="d-flex justify-center align-center">
             <v-card class="align-center justify-center h-auto card-bg" :class="isWide ? 'w-66' : 'w-100'">
-                <v-card-title class="d-flex justify-space-between">
-                    <div>
+                <v-card-title class="d-flex justify-space-between" :class="isWide ? '' : 'text-subtitle-1'">
+                    <div v-if="isWide">
                         <span>Добро пожаловать в </span>
                         <span><a href="/" class="link-no-decor">Wishlist</a>,&nbsp;</span>
                         <span v-if="userStore.user !== null">{{ userStore.user['name'] }}</span>
                         <span v-else>Гость</span>
                     </div>
+                    <div v-if="!isWide">
+                        <p>Добро пожаловать в </p>
+                        <p><a href="/" class="link-no-decor">Wishlist</a>, {{ isAuthenticated ? userStore.user['name'] : 'Гость' }}!</p>
+                    </div>
                     <span v-if="isAuthenticated" class="link-no-decor align-end" @click="logout">Выйти</span>
                     <div v-else>
-                        <a class="link-no-decor align-end" @click="showAuthDialog = true">Вход/Регистрация</a>
+                        <div v-if="isWide"><a class="link-no-decor align-end" @click="showAuthDialog = true">Вход/Регистрация</a></div>
+                        <div v-else class="d-flex flex-column justify-center align-end" @click="showAuthDialog = true">
+                            <a class="link-no-decor">Вход/</a>
+                            <a class="link-no-decor">Регистрация</a>
+                        </div>
                     </div>
-                    <v-dialog v-model="showAuthDialog" class="w-66">
+                    <v-dialog v-model="showAuthDialog" :class="isWide ? 'w-66' : 'w-100'">
                         <v-card class="card-bg">
                             <v-card-title class="d-flex justify-end">
                                 <v-icon @click="showAuthDialog = false" class="cursor-pointer" color="white" icon="mdi-close-thick"></v-icon>

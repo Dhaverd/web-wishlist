@@ -103,6 +103,25 @@ export const useWishStore = defineStore('wish', {
                 result = error;
             });
             return result;
+        },
+        async unbook(id, token){
+            let result = null;
+            await axios.post(`/api/wish/unbook`,
+                {
+                    id: id
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        token: token
+                    },
+                }
+            ).then((response)=>{
+                result = response;
+            }).catch((error)=>{
+                result = error;
+            });
+            return result;
         }
     },
 })

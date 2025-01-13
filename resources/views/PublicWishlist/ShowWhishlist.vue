@@ -33,6 +33,15 @@ export default {
         closeBookDialog(){
             this.bookConfirmationDialog = false;
         },
+        updateFrontWishes(){
+            this.fetching = true;
+            let urlArray = window.location.href.split('/');
+            let user_id = urlArray[urlArray.length - 1];
+            this.wishStore.getUserWishes(user_id).then((res)=>{
+                this.wishes = res;
+                this.fetching = false;
+            });
+        },
         book(){
             this.bookLoading = true;
             this.wishStore.book(this.bookItemId, this.userStore.user["id"], this.userStore.token).then((response)=>{
@@ -42,17 +51,16 @@ export default {
                     this.bookError = true;
                 } else {
                     this.bookConfirmationDialog = false;
-                    this.fetching = true;
-                    let urlArray = window.location.href.split('/');
-                    let user_id = urlArray[urlArray.length - 1];
-                    this.wishStore.getUserWishes(user_id).then((res)=>{
-                        this.wishes = res;
-                        this.fetching = false;
-                    });
+                    this.updateFrontWishes();
                 }
                 this.bookLoading = false;
             }).catch(()=>{
                 this.bookLoading = false;
+            });
+        },
+        unbook(id){
+            this.wishStore.unbook(id, this.userStore.token).then(()=>{
+                this.updateFrontWishes();
             });
         }
     },
@@ -101,7 +109,8 @@ export default {
                         <v-btn v-if="isAuthenticated && !isSameUser" @click="bookDialog(wish['id'], wish['name'])">Забронировать</v-btn>
                         <span v-else>Нет</span>
                     </span>
-                    <span v-else><v-icon color="green" icon="mdi-check-bold"></v-icon></span>
+                    <span v-else>Да <v-icon @click="unbook(wish['id'])" v-if="isAuthenticated && userStore.user['id'] == wish['book_user']['id']" class="cursor-pointer" icon="mdi-close-thick" color="red"></v-icon></span>
+<!--                    <span v-else><v-icon color="green" icon="mdi-check-bold"></v-icon></span>-->
                 </td>
             </tr>
         </tbody>
@@ -132,10 +141,10 @@ export default {
                 <v-label class="mr-3 ml-5 text-body-1">Цена: {{ wish['price'] }}₽</v-label>
                 <v-label class="mr-3 ml-5 text-body-1">Забронировано:&nbsp;
                     <span v-if="wish['book_user'] === null">
-                        <v-btn v-if="isAuthenticated && !isSameUser" @click="bookDialog(wish['id'], wish['name'])">Забронировать</v-btn>
+                        <v-btn v-if="isAuthenticated && !isSameUser" @click="bookDialog(wish['id'], wish['name'])" :size="isWide ? '' : 'small'">Забронировать</v-btn>
                         <span v-else>Нет</span>
                     </span>
-                    <span v-else> Да</span>
+                    <span v-else> Да <v-icon @click="unbook(wish['id'])" v-if="isAuthenticated && userStore.user['id'] == wish['book_user']['id']" class="cursor-pointer" icon="mdi-close-thick" color="red"></v-icon></span>
                 </v-label>
             </div>
         </div>
