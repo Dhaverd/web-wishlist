@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FeedbackController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -41,4 +42,8 @@ Route::group(['prefix' => 'wish'], function () {
         Route::post('book', [WishesController::class, 'book']);
         Route::post('unbook', [WishesController::class, 'unbook']);
     });
+});
+
+Route::group(['prefix' => 'feedback'], function () {
+    Route::post('create', [FeedbackController::class, 'create']);
 });

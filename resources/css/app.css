@@ -28,3 +28,9 @@ a:visited {
 a:active {
     color: crimson;
 }
+
+.feedback {
+    position: absolute;
+    right:    0;
+    bottom:   0;
+}

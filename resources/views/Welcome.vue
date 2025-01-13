@@ -21,6 +21,7 @@
                     <router-view v-else/>
                 </v-card-text>
             </v-card>
+            <FeedbackFooter/>
         </v-card-text>
     </v-card>
 </template>
@@ -28,8 +29,10 @@
 <script>
 import {useUserStore} from "../store/user.js";
 import {watch} from "vue";
+import FeedbackFooter from "./PublicWishlist/FeedbackFooter.vue";
 export default {
     name: "Welcome",
+    components: {FeedbackFooter},
     data: () => ({
         isAuthenticated: false,
         userStore: useUserStore(),

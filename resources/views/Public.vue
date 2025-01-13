@@ -47,6 +47,7 @@
                     <ShowWhishlist/>
                 </v-card-text>
             </v-card>
+            <FeedbackFooter/>
         </v-card-text>
     </v-card>
 </template>
@@ -57,9 +58,10 @@ import {useUserStore} from "../store/user.js";
 import { watch } from "vue";
 import Login from "./Auth/Login.vue";
 import Registration from "./Auth/Registration.vue";
+import FeedbackFooter from "./PublicWishlist/FeedbackFooter.vue";
 export default {
     name: "Public",
-    components: {Registration, Login, ShowWhishlist},
+    components: {FeedbackFooter, Registration, Login, ShowWhishlist},
     data: ()=>({
         isAuthenticated: false,
         isWide: window.innerWidth >= 800,
