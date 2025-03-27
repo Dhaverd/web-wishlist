@@ -1,0 +1,8 @@
+name: Gitea Actions Demo
+run-name: ${{ gitea.actor }} is testing out Gitea Actions 🚀
+on: [push]
+
+jobs:
+  health-chek:
+    steps:
+      - run: echo "Hello World!"
