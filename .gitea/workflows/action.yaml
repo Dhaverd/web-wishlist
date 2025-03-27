@@ -1,7 +1,7 @@
 name: Gitea Actions Demo
 run-name: ${{ gitea.actor }} is testing out Gitea Actions 🚀
 on: [push]
-runs-on: [self-hosted, linux]
+runs-on: [linux_amd64]
 
 jobs:
   health-chek:
