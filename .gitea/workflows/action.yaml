@@ -24,10 +24,10 @@ jobs:
         
       - name: Copy files to deployment directory
         run: | 
-          rsync -av ./ ${DEPLOY_DIR}/
+          sudo rsync -av ./ ${DEPLOY_DIR}/
           
           if [ -f .env ]; then
-            cp .env ${DEPLOY_DIR}/.env
+            sudo cp .env ${DEPLOY_DIR}/.env
           fi
           
           sudo chmod -R 777 ${DEPLOY_DIR}
