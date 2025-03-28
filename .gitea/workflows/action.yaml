@@ -37,12 +37,6 @@ jobs:
       - name: Copy files to deployment directory
         run: | 
           sudo rsync -av ./ ${DEPLOY_DIR}/
-          
-          if [ -f .env ]; then
-            sudo cp .env ${DEPLOY_DIR}/.env
-          fi
-          
-          sudo chmod -R 777 ${DEPLOY_DIR}
 
       #- name: Run migrations
       #  run: php artisan migrate --force
