@@ -2,6 +2,9 @@ name: Deploy Wishlist
 on:
   push:
     branches: [ master ]
+    
+env:
+  DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
 
 jobs:
   deploy:
@@ -29,24 +32,9 @@ jobs:
       - name: Build assets
         run: npm run build
         
-      #- name: Prepare deployment directory
-      #  run: |
-      #    sudo chown -R $USER:$USER $DEPLOY_DIR
-      #    sudo chmod -R 775 $DEPLOY_DIR
-        
       - name: Copy files to deployment directory
         run: | 
           sudo rsync -av ./ ${DEPLOY_DIR}/
-
-      #- name: Run migrations
-      #  run: php artisan migrate --force
-
-      #- name: Clear cache
-      #  run: |
-      #    php artisan cache:clear
-      #    php artisan view:clear
-      #    php artisan route:clear
-      #    php artisan config:clear
 
       - name: Restart PHP service
         run: sudo systemctl restart php8.2-fpm
