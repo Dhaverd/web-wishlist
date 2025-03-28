@@ -35,6 +35,7 @@ jobs:
       - name: Copy files to deployment directory
         run: | 
           sudo rsync -av ./ ${DEPLOY_DIR}/
+          sudo chmod -R 777 ${DEPLOY_DIR}/
 
       - name: Restart PHP service
         run: sudo systemctl restart php8.2-fpm
