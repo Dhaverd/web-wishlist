@@ -1,9 +1,49 @@
-name: Gitea Actions Demo
-run-name: ${{ gitea.actor }} is testing out Gitea Actions 🚀
-on: [push]
-runs-on: [linux_amd64]
+name: Deploy Wishlist
+on:
+  push:
+    branches: [ main ]
 
 jobs:
-  health-chek:
+  deploy:
+    runs-on: ubuntu
     steps:
-      - run: echo "Hello World!"
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Create .env file from secrets
+        run: cat ${ENV_PROD} > .env
+
+      - name: Install PHP dependencies
+        run: composer install
+
+      - name: Install Node.js dependencies
+        run: npm i
+
+      - name: Build assets
+        run: npm run build
+        
+      - name: Copy files to deployment directory
+        run: | 
+          rsync -av ./ ${DEPLOY_DIR}/
+          
+          if [ -f .env ]; then
+            cp .env ${DEPLOY_DIR}/.env
+          fi
+          
+          sudo chmod -R 777 ${DEPLOY_DIR}
+
+      #- name: Run migrations
+      #  run: php artisan migrate --force
+
+      #- name: Clear cache
+      #  run: |
+      #    php artisan cache:clear
+      #    php artisan view:clear
+      #    php artisan route:clear
+      #    php artisan config:clear
+
+      - name: Restart PHP service
+        run: sudo systemctl restart php8.2-fpm
+
+      - name: Restart Nginx
+        run: sudo systemctl restart nginx
