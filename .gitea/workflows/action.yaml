@@ -17,6 +17,8 @@ jobs:
             echo "Error: .env file is empty!"
             exit 1
           fi
+        env:
+          ENV_PROD: ${{ secrets.ENV_PROD }}
 
       - name: Install PHP dependencies
         run: composer install
@@ -27,10 +29,10 @@ jobs:
       - name: Build assets
         run: npm run build
         
-      - name: Prepare deployment directory
-        run: |
-          sudo chown -R $USER:$USER $DEPLOY_DIR
-          sudo chmod -R 775 $DEPLOY_DIR
+      #- name: Prepare deployment directory
+      #  run: |
+      #    sudo chown -R $USER:$USER $DEPLOY_DIR
+      #    sudo chmod -R 775 $DEPLOY_DIR
         
       - name: Copy files to deployment directory
         run: | 
