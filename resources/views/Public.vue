@@ -44,7 +44,7 @@
                     </v-dialog>
                 </v-card-title>
                 <v-card-text class="d-flex justify-center align-center h-auto">
-                    <ShowWhishlist/>
+                    <ShowWishlist/>
                 </v-card-text>
             </v-card>
             <FeedbackFooter/>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import ShowWhishlist from "./PublicWishlist/ShowWhishlist.vue";
+import ShowWishlist from "./PublicWishlist/ShowWishlist.vue";
 import {useUserStore} from "../store/user.js";
 import { watch } from "vue";
 import Login from "./Auth/Login.vue";
@@ -61,7 +61,7 @@ import Registration from "./Auth/Registration.vue";
 import FeedbackFooter from "./PublicWishlist/FeedbackFooter.vue";
 export default {
     name: "Public",
-    components: {FeedbackFooter, Registration, Login, ShowWhishlist},
+    components: {FeedbackFooter, Registration, Login, ShowWishlist},
     data: ()=>({
         isAuthenticated: false,
         isWide: window.innerWidth >= 800,

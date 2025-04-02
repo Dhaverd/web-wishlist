@@ -6,7 +6,7 @@ import CreateWish from "../Wishlist/CreateWish.vue";
 import EditWish from "../Wishlist/EditWish.vue";
 import {watch} from "vue";
 export default {
-    name: "ShowWhishlist",
+    name: "ShowWishlist",
     components: {EditWish, CreateWish, DeleteWish},
     data: () => ({
         isAuthenticated: false,

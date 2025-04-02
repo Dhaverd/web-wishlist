@@ -5,6 +5,9 @@ function auth(to, from, next){
     if (to.path === '/'){
         next({path: '/wishlist'});
     }
+    if (to.path.includes('/api')){
+        next();
+    }
     if (to.path === '/auth_options' || to.path === '/login' || to.path === '/registration'){
         if (useUserStore().token !== null){
             next({path: '/wishlist'});
