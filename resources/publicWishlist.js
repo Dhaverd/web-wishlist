@@ -16,12 +16,6 @@ const vuetify = createVuetify({
 
 const pinia = createPinia()
 
-const routes = [
-]
-
-const router = createRouter({
-    history: createMemoryHistory(),
-    routes,
-})
+import router from './js/router.js'
 
 createApp(PublicApp).use(vuetify).use(router).use(pinia).mount("#app")

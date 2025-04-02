@@ -14,8 +14,9 @@ export const useUserStore = defineStore('user', {
             this.token = token;
             localStorage.setItem('auth_token', token);
         },
-        checkUser() {
-            axios.get(
+        async checkUser() {
+            let result = null;
+            await axios.get(
                 '/api/auth/user',
                 {
                     headers:
@@ -26,9 +27,12 @@ export const useUserStore = defineStore('user', {
                 }
             ).then((res) => {
                 this.setUser(res.data);
+                result = true;
             }).catch((error) => {
                 this.nullifyUser();
-            })
+                result = error;
+            });
+            return result;
         },
         async login(email, password, rememberMe) {
             await axios.post(

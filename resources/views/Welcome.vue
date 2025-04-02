@@ -28,7 +28,7 @@
 
 <script>
 import {useUserStore} from "../store/user.js";
-import {watch} from "vue";
+import {ref, watch} from "vue";
 import FeedbackFooter from "./PublicWishlist/FeedbackFooter.vue";
 export default {
     name: "Welcome",
@@ -37,12 +37,13 @@ export default {
         isAuthenticated: false,
         userStore: useUserStore(),
         fetchingUser: false,
-        isWide: window.innerWidth >= 800
+        isWide: window.innerWidth >= 800,
+        user: null
     }),
     computed: {
-        user() {
-            return this.userStore.user;
-        },
+        // user() {
+        //     return ref(this.userStore.user);
+        // },
     },
     methods: {
         async logout() {
@@ -52,17 +53,24 @@ export default {
     },
     mounted() {
         this.fetchingUser = true;
-        this.$router.push('/auth_options');
         watch(this.userStore, (newStore, oldStore)=>{
             this.isAuthenticated = newStore.user !== null && newStore.user !== undefined;
             this.fetchingUser = false;
             if (this.isAuthenticated) {
-                this.$router.push('/wishlist');
-            } else {
-                this.$router.push('/auth_options');
+                this.user = newStore.user;
             }
         });
-        this.userStore.checkUser();
+        // this.$router.push('/auth_options');
+        // watch(this.userStore, (newStore, oldStore)=>{
+        //     this.isAuthenticated = newStore.user !== null && newStore.user !== undefined;
+        //     this.fetchingUser = false;
+        //     if (this.isAuthenticated) {
+        //         this.$router.push('/wishlist');
+        //     } else {
+        //         this.$router.push('/auth_options');
+        //     }
+        // });
+        // this.userStore.checkUser();
     }
 }
 </script>
